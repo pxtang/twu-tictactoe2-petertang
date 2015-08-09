@@ -17,11 +17,12 @@ import static org.junit.Assert.*;
 public class BoardTest {
 
     private static final Integer DEFAULT_LOCATION = 0;
+    public static final String DEFAULT_SYMBOL = "X";
     private Board board;
     private List<String> cells;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         cells = new ArrayList<>(asList(" "," "," "," "," "," "," "," "," "));
         board = new Board(cells);
     }
@@ -38,23 +39,23 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldMarkLocation0WithXWhenMarked() throws Exception {
+    public void shouldMarkLocation0WithXWhenMarked() {
         board.mark(DEFAULT_LOCATION, "X");
 
         assertThat(cells.get(DEFAULT_LOCATION), is("X"));
     }
 
     @Test
-    public void shouldMarkLocation1WithXWhenMarked() throws Exception {
-        board.mark(1, "X");
+    public void shouldMarkLocation1WithXWhenMarked() {
+        board.mark(1, DEFAULT_SYMBOL);
 
-        assertThat(cells.get(1), is("X"));
+        assertThat(cells.get(1), is(DEFAULT_SYMBOL));
 
     }
 
     @Test
-    public void shouldProduceXinLocationWhenLocationMarked() throws Exception {
-        cells.set(DEFAULT_LOCATION,"X");
+    public void shouldProduceXinLocationWhenLocationMarked() {
+        cells.set(DEFAULT_LOCATION, DEFAULT_SYMBOL);
 
         assertThat(board.produceBoard(), is(
                 " X |   |  \n" +
@@ -65,34 +66,64 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldMarkWithSymbolWhenNonXSymbolUsed() throws Exception {
+    public void shouldMarkWithSymbolWhenNonXSymbolUsed() {
         String symbol = "e";
-        board.mark(DEFAULT_LOCATION,symbol);
+        board.mark(DEFAULT_LOCATION, symbol);
 
         assertThat(cells.get(DEFAULT_LOCATION), is("e"));
 
     }
 
     @Test
-    public void shouldBeAbleToMoveIfLocationNotOccupied() throws Exception {
+    public void shouldBeAbleToMoveIfLocationNotOccupied() {
         assertTrue(board.canMove(DEFAULT_LOCATION));
 
     }
 
     @Test
-    public void shouldBeUnableToMoveIfLocationOccupied() throws Exception {
-        cells.set(DEFAULT_LOCATION,"X");
+    public void shouldBeUnableToMoveIfLocationOccupied() {
+        cells.set(DEFAULT_LOCATION,DEFAULT_SYMBOL);
         assertFalse(board.canMove(DEFAULT_LOCATION));
 
     }
 
     @Test
-    public void shouldBeDrawWhenBoardFull() throws Exception {
+    public void shouldBeDrawWhenBoardFull() {
         for (int i = 0; i < cells.size(); i++) {
              cells.set(i,"e");
         }
 
-        assertTrue(board.isDraw());
+        assertTrue(board.checkDraw());
+
+    }
+
+    @Test
+    public void shouldWinWhenThreeOfSameInRow() {
+        for (int i = 0; i < 3; i++) {
+            cells.set(i,DEFAULT_SYMBOL);
+        }
+
+        assertTrue(board.checkWin(2));
+
+    }
+
+    @Test
+    public void shouldWinWhenThreeOfSameInCol() {
+        for (int i = 1; i < 9; i+=3) {
+            cells.set(i, DEFAULT_SYMBOL);
+        }
+
+        assertTrue(board.checkWin(4));
+
+    }
+
+    @Test
+    public void shouldWinWhenDiagThreeOfSame() {
+        cells.set(0,DEFAULT_SYMBOL);
+        cells.set(4,DEFAULT_SYMBOL);
+        cells.set(8,DEFAULT_SYMBOL);
+
+        assertTrue(board.checkWin(0));
 
     }
 }

@@ -4,6 +4,8 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.PrintStream;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 
 /**
@@ -27,6 +29,7 @@ public class PlayerTest {
 
     @Test
     public void shouldRequestMoveInputWhenPlayerMove() throws Exception {
+        when(board.canMove(0)).thenReturn(true);
         player.move();
 
         verify(printStream).println("Input 1-9 to move");
@@ -35,6 +38,7 @@ public class PlayerTest {
     @Test
     public void shouldTryToMarkBoardLocation0WhenUserInput1() throws Exception {
         when(bufferedReader.readLine()).thenReturn("1");
+        when(board.canMove(0)).thenReturn(true);
         player.move();
 
         verify(board).mark(0, "X");
@@ -43,6 +47,7 @@ public class PlayerTest {
     @Test
     public void shouldTryToMarkBoardLocation1WhenUserInput2() throws Exception {
         when(bufferedReader.readLine()).thenReturn("2");
+        when(board.canMove(1)).thenReturn(true);
         player.move();
 
         verify(board).mark(1, "X");
@@ -52,6 +57,7 @@ public class PlayerTest {
     public void shouldMarkWithPlayerSymbolWhenPlayerMarks() throws Exception {
         player = new Player(printStream,bufferedReader,board,"e");
         when(bufferedReader.readLine()).thenReturn("1");
+        when(board.canMove(0)).thenReturn(true);
 
         player.move();
         verify(board).mark(0,"e");
@@ -61,7 +67,8 @@ public class PlayerTest {
     @Test
     public void shouldSayInvalidLocationWhenPlayerTriesToMoveInOccupiedSpace() throws Exception {
         when(bufferedReader.readLine()).thenReturn("1", "2");
-        when(board.canMove(0)).thenReturn(false, true);
+        when(board.canMove(0)).thenReturn(false);
+        when(board.canMove(1)).thenReturn(true);
         player.move();
 
         verify(printStream).println("Location already taken");
@@ -76,6 +83,15 @@ public class PlayerTest {
         player.move();
 
         verify(printStream, times(2)).println("Location already taken");
+
+    }
+
+    @Test
+    public void shouldReturnMoveIndexWhenPlayerMoves() throws Exception {
+        when(bufferedReader.readLine()).thenReturn("5");
+        when(board.canMove(4)).thenReturn(true);
+
+        assertThat(player.move(), is(4));
 
     }
 }

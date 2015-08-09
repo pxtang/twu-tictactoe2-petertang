@@ -24,16 +24,25 @@ public class Game {
 
     private void play() {
         Player currentPlayer = null;
+        int playerNumber = 0;
         boolean keepPlaying = true;
         while(keepPlaying) {
             if (currentPlayer == player1) {
                 currentPlayer = player2;
+                playerNumber = 2;
             } else {
                 currentPlayer = player1;
+                playerNumber = 1;
             }
-            currentPlayer.move();
+            int lastMove = currentPlayer.move();
             printStream.println(board.produceBoard());
-            if (board.isDraw()) {
+
+            if (board.checkWin(lastMove)) {
+                printStream.println("Player win!");
+                keepPlaying = false;
+            }
+
+            if (keepPlaying && board.checkDraw()) {
                 printStream.println("Game is a draw");
                 keepPlaying = false;
             }

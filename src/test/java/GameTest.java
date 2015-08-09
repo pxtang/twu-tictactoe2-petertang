@@ -29,6 +29,7 @@ public class GameTest {
 
     @Test
     public void shouldPrintBoardWhenStart() throws Exception {
+        when(board.checkDraw()).thenReturn(false,true);
 
         game.start();
         verify(printStream, atLeastOnce()).println(board.produceBoard());
@@ -37,6 +38,7 @@ public class GameTest {
 
     @Test
     public void shouldHavePlayer1MoveWhenStart() throws Exception {
+        when(board.checkDraw()).thenReturn(true);
         game.start();
 
         verify(player1).move();
@@ -44,13 +46,15 @@ public class GameTest {
 
     @Test
     public void shouldPrintBoardAfterPlayer1Move() throws Exception {
+        when(board.checkDraw()).thenReturn(true);
         game.start();
         verify(printStream, atLeast(2)).println(board.produceBoard());
 
     }
 
     @Test
-    public void shouldHavePlayer2MoveWhenStart() throws Exception {
+    public void shouldHavePlayer2MoveAfterPlayer1Move() throws Exception {
+        when(board.checkDraw()).thenReturn(false,true);
         game.start();
 
         verify(player2).move();
@@ -58,16 +62,18 @@ public class GameTest {
 
     @Test
     public void shouldPrintBoardAfterPlayer2Move() throws Exception {
+        when(board.checkDraw()).thenReturn(false,true);
+
         game.start();
         verify(printStream, atLeast(3)).println(board.produceBoard());
     }
 
     @Test
     public void shouldPrintDrawIfGameIsDraw() throws Exception {
-        when(board.isDraw()).thenReturn(true);
+        when(board.checkDraw()).thenReturn(true);
         game.start();
-        verify(printStream).println("Game is a draw");
 
+        verify(printStream).println("Game is a draw");
     }
 
 }

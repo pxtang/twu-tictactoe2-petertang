@@ -20,7 +20,7 @@ public class Player {
         this.symbol = symbol;
     }
 
-    public void move() {
+    public int move() {
         boolean validMove = false;
         int locationToMark = 0;
 
@@ -46,5 +46,6 @@ public class Player {
         }
 
         board.mark(locationToMark, symbol);
+        return locationToMark;
     }
 }

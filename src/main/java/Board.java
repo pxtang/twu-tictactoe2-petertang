@@ -32,7 +32,7 @@ public class Board {
         return cells.get(locationToMove).equals(" ");
     }
 
-    public boolean isDraw() {
+    public boolean checkDraw() {
         for (String cell : cells) {
             if (cell.equals(" ")) {
                 return false;
@@ -41,7 +41,58 @@ public class Board {
         return true;
     }
 
-    public boolean checkWin() {
+    public boolean checkWin(int moveLocation) {
+        if (checkRowWin(moveLocation)) {
+            return true;
+        }
+
+        if (checkColumnWin(moveLocation)) {
+            return true;
+        }
+
+        if (checkDiagonals()) {
+            return true;
+        }
+
         return false;
     }
+
+    private boolean checkDiagonals() {
+        String[] SWDiagValues = {cells.get(0), cells.get(4), cells.get(8)};
+        if (!checkForBlanks(SWDiagValues)) {
+            return SWDiagValues[0].equals(SWDiagValues[1]) && SWDiagValues[1].equals(SWDiagValues[2]);
+        }
+
+        String[] SEDiagValues = {cells.get(2), cells.get(4), cells.get(6)};
+        if (!checkForBlanks(SEDiagValues)) {
+            return SEDiagValues[0].equals(SEDiagValues[1]) && SEDiagValues[1].equals(SEDiagValues[2]);
+        }
+
+
+        return false;
+    }
+
+    private boolean checkColumnWin(int moveLocation) {
+        int colNumber = moveLocation % 3;
+        String[] colValues = {cells.get(colNumber), cells.get(colNumber+3), cells.get(colNumber+6)};
+
+        return colValues[0].equals(colValues[1]) && colValues[1].equals(colValues[2]);
+    }
+
+    private boolean checkRowWin(int moveLocation) {
+        int rowNumber = moveLocation / 3;
+        int rowStartIndex = rowNumber * 3;
+        String[] rowValues = {cells.get(rowStartIndex), cells.get(rowStartIndex+1), cells.get(rowStartIndex+2)};
+
+        return rowValues[0].equals(rowValues[1]) && rowValues[1].equals(rowValues[2]);
+    }
+
+    private boolean checkForBlanks(String[] values) {
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].equals(" ")) return true;
+
+        }
+        return false;
+    }
+
 }
