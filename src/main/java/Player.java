@@ -11,29 +11,40 @@ public class Player {
     private PrintStream printStream;
     private BufferedReader bufferedReader;
     private Board board;
+    private String symbol;
 
-    public Player(PrintStream printStream, BufferedReader bufferedReader, Board board) {
+    public Player(PrintStream printStream, BufferedReader bufferedReader, Board board, String symbol) {
         this.printStream = printStream;
         this.bufferedReader = bufferedReader;
         this.board = board;
+        this.symbol = symbol;
     }
 
     public void move() {
-        printStream.println("Input 1-9 to move");
-        String locationInput = null;
-        try {
-            locationInput = bufferedReader.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        boolean validMove = false;
         int locationToMark = 0;
-        try {
-            locationToMark = parseInt(locationInput)-1;
-        } catch(NumberFormatException e) {
-            printStream.println("Invalid input");
+
+        while(!validMove) {
+            printStream.println("Input 1-9 to move");
+            String locationInput = null;
+            try {
+                locationInput = bufferedReader.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                locationToMark = parseInt(locationInput) - 1;
+            } catch (NumberFormatException e) {
+                printStream.println("Invalid input");
+            }
+
+            validMove = board.canMove(locationToMark);
+            if (!validMove) {
+                printStream.println("Location already taken");
+            }
         }
 
-        board.mark(locationToMark);
+        board.mark(locationToMark, symbol);
     }
 }

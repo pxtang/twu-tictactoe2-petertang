@@ -39,16 +39,50 @@ public class BoardTest {
 
     @Test
     public void shouldMarkLocation0WithXWhenMarked() throws Exception {
-        board.mark(DEFAULT_LOCATION);
+        board.mark(DEFAULT_LOCATION, "X");
 
         assertThat(cells.get(DEFAULT_LOCATION), is("X"));
     }
 
     @Test
     public void shouldMarkLocation1WithXWhenMarked() throws Exception {
-        board.mark(1);
+        board.mark(1, "X");
 
         assertThat(cells.get(1), is("X"));
+
+    }
+
+    @Test
+    public void shouldProduceXinLocationWhenLocationMarked() throws Exception {
+        cells.set(DEFAULT_LOCATION,"X");
+
+        assertThat(board.produceBoard(), is(
+                " X |   |  \n" +
+                "-----------\n" +
+                "   |   |  \n" +
+                "-----------\n" +
+                "   |   |  \n"));
+    }
+
+    @Test
+    public void shouldMarkWithSymbolWhenNonXSymbolUsed() throws Exception {
+        String symbol = "e";
+        board.mark(DEFAULT_LOCATION,symbol);
+
+        assertThat(cells.get(DEFAULT_LOCATION), is("e"));
+
+    }
+
+    @Test
+    public void shouldReturnTrueIfLocationNotOccupied() throws Exception {
+        assertTrue(board.canMove(DEFAULT_LOCATION));
+
+    }
+
+    @Test
+    public void shouldReturnFalseIfLocationOccupied() throws Exception {
+        cells.set(DEFAULT_LOCATION,"X");
+        assertFalse(board.canMove(DEFAULT_LOCATION));
 
     }
 }

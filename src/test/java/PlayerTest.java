@@ -3,11 +3,8 @@ import org.junit.Test;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
-import java.util.ArrayList;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by ptang on 8/8/15.
@@ -18,13 +15,14 @@ public class PlayerTest {
     private Player player;
     private Board board;
     private BufferedReader bufferedReader;
+    private final String DEFAULT_SYMBOL = "X";
 
     @Before
     public void setUp() throws Exception {
         printStream = mock(PrintStream.class);
         bufferedReader = mock(BufferedReader.class);
         board = mock(Board.class);
-        player = new Player(printStream, bufferedReader, board);
+        player = new Player(printStream, bufferedReader, board, DEFAULT_SYMBOL);
     }
 
     @Test
@@ -39,7 +37,7 @@ public class PlayerTest {
         when(bufferedReader.readLine()).thenReturn("1");
         player.move();
 
-        verify(board).mark(0);
+        verify(board).mark(0, "X");
     }
 
     @Test
@@ -47,6 +45,37 @@ public class PlayerTest {
         when(bufferedReader.readLine()).thenReturn("2");
         player.move();
 
-        verify(board).mark(1);
+        verify(board).mark(1, "X");
+    }
+
+    @Test
+    public void shouldMarkWithPlayerSymbolWhenPlayerMarks() throws Exception {
+        player = new Player(printStream,bufferedReader,board,"e");
+        when(bufferedReader.readLine()).thenReturn("1");
+
+        player.move();
+        verify(board).mark(0,"e");
+
+    }
+
+    @Test
+    public void shouldSayInvalidLocationWhenPlayerTriesToMoveInOccupiedSpace() throws Exception {
+        when(bufferedReader.readLine()).thenReturn("1", "2");
+        when(board.canMove(0)).thenReturn(false, true);
+        player.move();
+
+        verify(printStream).println("Location already taken");
+
+    }
+
+    @Test
+    public void shouldSayInvalidLocationTwiceWhenPlayerTriesToMoveInOccupiedSpaceTwice() throws Exception {
+        when(bufferedReader.readLine()).thenReturn("1", "1", "2");
+        when(board.canMove(0)).thenReturn(false, false);
+        when(board.canMove(1)).thenReturn(true);
+        player.move();
+
+        verify(printStream, times(2)).println("Location already taken");
+
     }
 }

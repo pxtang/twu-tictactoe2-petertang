@@ -16,14 +16,19 @@ public class Board {
 
 
     public String produceBoard() {
-        return "   |   |  \n" +
+        return String.format(
+                " %s | %s | %s\n" +
                 "-----------\n" +
-                "   |   |  \n" +
+                " %s | %s | %s\n" +
                 "-----------\n" +
-                "   |   |  \n";
+                " %s | %s | %s\n",cells.toArray());
     }
 
-    public void mark(Integer location) {
-        cells.set(location,"X");
+    public void mark(Integer location, String symbol) {
+        cells.set(location, symbol);
+    }
+
+    public boolean canMove(Integer locationToMove) {
+        return cells.get(locationToMove).equals(" ");
     }
 }
