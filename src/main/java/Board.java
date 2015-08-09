@@ -31,4 +31,17 @@ public class Board {
     public boolean canMove(Integer locationToMove) {
         return cells.get(locationToMove).equals(" ");
     }
+
+    public boolean isDraw() {
+        for (String cell : cells) {
+            if (cell.equals(" ")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean checkWin() {
+        return false;
+    }
 }

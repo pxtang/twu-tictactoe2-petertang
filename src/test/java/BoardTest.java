@@ -74,15 +74,25 @@ public class BoardTest {
     }
 
     @Test
-    public void shouldReturnTrueIfLocationNotOccupied() throws Exception {
+    public void shouldBeAbleToMoveIfLocationNotOccupied() throws Exception {
         assertTrue(board.canMove(DEFAULT_LOCATION));
 
     }
 
     @Test
-    public void shouldReturnFalseIfLocationOccupied() throws Exception {
+    public void shouldBeUnableToMoveIfLocationOccupied() throws Exception {
         cells.set(DEFAULT_LOCATION,"X");
         assertFalse(board.canMove(DEFAULT_LOCATION));
+
+    }
+
+    @Test
+    public void shouldBeDrawWhenBoardFull() throws Exception {
+        for (int i = 0; i < cells.size(); i++) {
+             cells.set(i,"e");
+        }
+
+        assertTrue(board.isDraw());
 
     }
 }

@@ -19,9 +19,24 @@ public class Game {
 
     public void start() {
         printStream.println(board.produceBoard());
-        player1.move();
-        printStream.println(board.produceBoard());
-        player2.move();
-        printStream.println(board.produceBoard());
+        play();
+    }
+
+    private void play() {
+        Player currentPlayer = null;
+        boolean keepPlaying = true;
+        while(keepPlaying) {
+            if (currentPlayer == player1) {
+                currentPlayer = player2;
+            } else {
+                currentPlayer = player1;
+            }
+            currentPlayer.move();
+            printStream.println(board.produceBoard());
+            if (board.isDraw()) {
+                printStream.println("Game is a draw");
+                keepPlaying = false;
+            }
+        }
     }
 }

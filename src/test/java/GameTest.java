@@ -60,6 +60,14 @@ public class GameTest {
     public void shouldPrintBoardAfterPlayer2Move() throws Exception {
         game.start();
         verify(printStream, atLeast(3)).println(board.produceBoard());
+    }
+
+    @Test
+    public void shouldPrintDrawIfGameIsDraw() throws Exception {
+        when(board.isDraw()).thenReturn(true);
+        game.start();
+        verify(printStream).println("Game is a draw");
 
     }
+
 }
